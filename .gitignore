@@ -1,0 +1,5 @@
+tables/
+data/
+output/
+.ipynb_checkpoints/
+*.rds
