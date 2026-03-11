@@ -1,0 +1,225 @@
+data:
+  genome_fasta: "genomes/silicus_plus/silicusPlusCGDCre/silicusPlusCGDCre.fa"
+  chrom_sizes: "mm10/mm10.chrom.sizes"
+  data_matrix: "data/pcg_norm_1000bp.parquet"
+  regions_file: null
+  selected_tracks: null
+  genome_tile_size: 1000000
+  exclude_chroms:
+    - chrM
+  val_chroms:
+    - chr8
+    - chr9
+  test_chroms:
+    - chr14
+    - chr10
+    - chr15
+    - chr4
+  split_by_chrom: true
+
+model:
+  species: mouse
+  name: "flashzoi"
+  seq_len: 524288
+  pred_len: 196608
+  bin_size: 32
+  freeze_trunk: false
+  num_output_tasks: null
+  train_from_scratch: true
+
+training:
+  batch_size: 4
+  finetune_batch_size: 4
+
+  epochs: 500
+  learning_rate: 0.00006
+  head_learning_rate: 0.0002
+  finetune_learning_rate: 0.00006
+  optimizer: "adamw"
+  weight_decay: 0.00000002
+  weight_decay_transformer: 0.00000001
+  loss: "cosine_mse_log"
+  loss_center_crop_bp: 196608
+  mixed_precision: true
+  clip_grad_norm: 0.2
+  linear_probe_epochs: 0
+  linear_probe_early_stopping_patience: 5
+
+  warmup_steps: 20000
+  early_stopping_patience: 2000
+  min_improvement: 0.0001
+  reduce_lr_on_plateau: false
+
+  lr_patience: 10
+  lr_factor: 0.5
+  lr_min: 0.000001
+  num_workers: 4
+  use_sync_batchnorm: false
+
+augmentation:
+  reverse_complement: true
+  shift_max: 3
+  squash_targets: false
+  use_random_crop: true
+  samples_per_region: 5
+  tile_stride: 98304
+
+performance:
+  lazy_loading: true
+  cache_file: null
+
+distributed:
+  enabled: true
+  num_gpus: 8
+
+logging:
+  use_wandb: true
+  wandb_project: "borzoi-finetune"
+  wandb_run_name: "flashzoi_silicusPlusCGDCre_from_scratch"
+
+  checkpoint_dir: "checkpoints/flashzoi_silicusPlusCGDCre_from_scratch"
+  save_best_only: false
+
+  eval_every_n: 500
+  save_every_n: 500
+  log_every_n: 10
+
+validation:
+  quantile_overlap:
+    enabled: true
+
+inference:
+  # Best model (val_loss) - silicus
+  - name: "best_model_silicus"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "genomes/silicus_plus/silicusPlusCGDCre/silicusPlusCGDCre.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/silicus"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    checkpoint: "best_model"
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.pt_524k_"
+  # Best model (val_loss) - mm10
+  - name: "best_model_mm10"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "mm10/mm10.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/mm10"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    checkpoint: "best_model"
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.pt_mm10_524k_"
+  # Best val_iou - silicus
+  - name: "val_iou_silicus"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "genomes/silicus_plus/silicusPlusCGDCre/silicusPlusCGDCre.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/silicus_iou"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    metric: val_iou
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.metrics.iou.pt_524k_"
+  # Best val_iou - mm10
+  - name: "val_iou_mm10"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "mm10/mm10.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/mm10_iou"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    metric: val_iou
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.metrics.iou.pt_mm10_524k_"
+  # Best val_genome_wide_pearson - silicus
+  - name: "val_genome_wide_pearson_silicus"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "genomes/silicus_plus/silicusPlusCGDCre/silicusPlusCGDCre.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/silicus_pearson"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    metric: val_genome_wide_pearson
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.metrics.pearson.pt_524k_"
+  # Best val_genome_wide_pearson - mm10
+  - name: "val_genome_wide_pearson_mm10"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "mm10/mm10.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/mm10_pearson"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    metric: val_genome_wide_pearson
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.metrics.pearson.pt_mm10_524k_"
+  # Last checkpoint - silicus
+  - name: "last_silicus"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "genomes/silicus_plus/silicusPlusCGDCre/silicusPlusCGDCre.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/silicus_last"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    checkpoint: "last"
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.metrics.last.pt_524k_"
+  # Last checkpoint - mm10
+  - name: "last_mm10"
+    run_after_training: true
+    mode: "genome"
+    genome_fasta: "mm10/mm10.fa"
+    output_dir: "predictions/flashzoi_silicusPlusCGDCre_from_scratch/mm10_last"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    checkpoint: "last"
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.silicusPlusCGDCre.metrics.last.pt_mm10_524k_"
+
+misha_track:
+  enabled: true
+  groot: "misha_db/mm10"
+  suffix: "_cropped"
+  binsize: 32

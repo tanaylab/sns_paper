@@ -1,3 +1,8 @@
+# Data preparation script: import Borzoi model predictions into misha tracks.
+# This script documents the steps used to prepare data and is NOT meant to be re-run directly.
+# It references local paths to bigWig prediction outputs from the Borzoi training pipeline.
+# The resulting tracks are provided in the data/mm10/tracks/ directory.
+#
 # ---
 # jupyter:
 #   jupytext:

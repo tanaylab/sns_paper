@@ -523,7 +523,7 @@ load_cg_trace_filtered <- function() {
 #' @param track_pattern Track name pattern to match (e.g., "rf524k_EB4_cnt")
 #' @return Data frame with columns: metric_type, track_path, track_name, is_k4
 get_metric_checkpoints <- function(genome_dir,
-                                    track_base_dir = "/home/aviezerl/mm10/tracks/seq/IQ/pcg/flashzoi",
+                                    track_base_dir = here("data", "mm10", "tracks", "seq", "IQ", "pcg", "flashzoi"),
                                     track_pattern = NULL) {
     metrics_dir <- file.path(track_base_dir, genome_dir, "metrics")
 
@@ -611,7 +611,7 @@ get_metric_checkpoints <- function(genome_dir,
 check_missing_metrics <- function(genome_dirs,
                                    track_pattern = "rf524k_EB4_cnt",
                                    expected_metrics = c("iou", "loss", "pearson"),
-                                   track_base_dir = "/home/aviezerl/mm10/tracks/seq/IQ/pcg/flashzoi") {
+                                   track_base_dir = here("data", "mm10", "tracks", "seq", "IQ", "pcg", "flashzoi")) {
 
     all_checkpoints <- list()
 
@@ -720,7 +720,7 @@ evaluate_checkpoints <- function(genome_dir,
                                   test_chroms = c("chr4", "chr10", "chr14", "chr15"),
                                   val_chroms = c("chr8", "chr9"),
                                   iterator_size = 100,
-                                  track_base_dir = "/home/aviezerl/mm10/tracks/seq/IQ/pcg/flashzoi") {
+                                  track_base_dir = here("data", "mm10", "tracks", "seq", "IQ", "pcg", "flashzoi")) {
 
     # Get all checkpoints
     checkpoints <- get_metric_checkpoints(genome_dir, track_base_dir, track_pattern)
@@ -847,7 +847,7 @@ select_best_checkpoint <- function(eval_results,
 update_checkpoint_symlink <- function(genome_dir,
                                        track_basename,
                                        best_metric_type,
-                                       track_base_dir = "/home/aviezerl/mm10/tracks/seq/IQ/pcg/flashzoi",
+                                       track_base_dir = here("data", "mm10", "tracks", "seq", "IQ", "pcg", "flashzoi"),
                                        dry_run = TRUE) {
 
     genome_path <- file.path(track_base_dir, genome_dir)

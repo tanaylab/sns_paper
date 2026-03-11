@@ -36,7 +36,6 @@ sns_paper/
   data/              Genomic data, misha track databases, and precomputed intermediates
     mm10/            Mouse genome (misha database with tracks)
     hg19/            Human genome (misha database with tracks)
-    files/           Supplementary data files
   tables/            Supplementary tables and large precomputed R objects
   figs/              Figure outputs (PPTX and PNG)
   output/            Analysis output files

@@ -1,0 +1,153 @@
+data:
+  genome_fasta: "mm10/mm10.fa"
+  chrom_sizes: "mm10/mm10.chrom.sizes"
+  data_matrix: "data/pcg_norm_1000bp.parquet"
+  regions_file: null
+  selected_tracks: null
+  genome_tile_size: 1000000
+  exclude_chroms:
+    - chrM
+  val_chroms:
+    - chr8
+    - chr9
+  test_chroms:
+    - chr14
+    - chr10
+    - chr15
+    - chr4
+  split_by_chrom: true
+
+model:
+  species: mouse
+  name: "flashzoi"
+  seq_len: 524288
+  pred_len: 196608
+  bin_size: 32
+  freeze_trunk: false
+  num_output_tasks: null
+  train_from_scratch: true
+
+training:
+  batch_size: 4                      # Must match finetune_batch_size for from-scratch (no linear probe stage)
+  finetune_batch_size: 4
+
+  epochs: 1000
+  learning_rate: 0.00006
+  head_learning_rate: 0.0002
+  finetune_learning_rate: 0.00006
+  optimizer: "adamw"
+  weight_decay: 0.00000002           # Conv layers (swapped to match original training-borzoi)
+  weight_decay_transformer: 0.00000001  # Transformer (swapped to match original training-borzoi)
+  loss: "cosine_mse_log"
+  loss_center_crop_bp: 196608
+  mixed_precision: true
+  clip_grad_norm: 0.2
+  linear_probe_epochs: 0             # Skip two-stage training for from-scratch
+  linear_probe_early_stopping_patience: 5
+
+  warmup_steps: 20000                # Match original training-borzoi
+  early_stopping_patience: 2000
+  min_improvement: 0.0001
+  reduce_lr_on_plateau: false
+
+  lr_patience: 10
+  lr_factor: 0.5
+  lr_min: 0.000001
+  num_workers: 4
+  use_sync_batchnorm: false
+
+augmentation:
+  reverse_complement: true
+  shift_max: 3
+  squash_targets: false
+  use_random_crop: true
+  samples_per_region: 5
+  tile_stride: 98304
+
+performance:
+  lazy_loading: true
+  cache_file: null
+
+distributed:
+  enabled: true
+  num_gpus: 8
+
+logging:
+  use_wandb: true
+  wandb_project: "borzoi-finetune"
+  wandb_run_name: "524kb_norm_flashzoi_cosine_mse_log_new_chroms_from_scratch"
+
+  checkpoint_dir: "checkpoints/524kb_norm_flashzoi_cosine_mse_log_new_chroms_from_scratch"
+  save_best_only: false
+
+  eval_every_n: 500
+  save_every_n: 500
+  log_every_n: 10
+
+validation:
+  quantile_overlap:
+    enabled: true
+
+inference:
+  - name: "best_model"
+    run_after_training: true
+    mode: "genome"
+    output_dir: "predictions/524kb_norm_flashzoi_cosine_mse_log_new_chroms_from_scratch"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    checkpoint: "best_model"
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.mm10.rf524k_"
+  - name: "val_iou"
+    run_after_training: true
+    mode: "genome"
+    output_dir: "predictions/524kb_norm_flashzoi_cosine_mse_log_new_chroms_from_scratch_iou"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    metric: val_iou
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.mm10.metrics.iou.rf524k_"
+  - name: "val_genome_wide_pearson"
+    run_after_training: true
+    mode: "genome"
+    output_dir: "predictions/524kb_norm_flashzoi_cosine_mse_log_new_chroms_from_scratch_pearson"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    metric: val_genome_wide_pearson
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.mm10.metrics.pearson.rf524k_"
+  - name: "last"
+    run_after_training: true
+    mode: "genome"
+    output_dir: "predictions/524kb_norm_flashzoi_cosine_mse_log_new_chroms_from_scratch_last"
+    output_format:
+      - "bigwig"
+    batch_size: 12
+    checkpoint: "last"
+    use_rc_average: true
+    mixed_precision: true
+    num_workers: 4
+    bigwig_jobs: 10
+    misha_track:
+      track_prefix: "seq.IQ.pcg.flashzoi.mm10.metrics.last.rf524k_"
+
+misha_track:
+  enabled: true
+  groot: "misha_db/mm10"
+  suffix: "_cropped"
+  binsize: 32

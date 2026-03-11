@@ -5,7 +5,7 @@
 # ==============================================================================
 
 library(here)
-devtools::load_all("/home/aviezerl/src/misha")
+library(misha)
 library(misha.ext)
 library(tidyverse)
 library(ggrepel)
@@ -16,7 +16,7 @@ options(gmax.data.size = 1e10)
 options(gmultitasking = FALSE)
 
 # Source utility functions
-source(here("analysis/borzoi_utils.R"))
+source(here("code", "borzoi_utils.R"))
 
 # ==============================================================================
 # 2. Track Configuration
@@ -590,13 +590,13 @@ create_filters <- function(cg_trace_f) {
     )
 
     # Load CRE and promoter data
-    cre_peaks <- readRDS("/home/aviezerl/src/borzoi_finetune/data/peaks_multieb_marginal.rds")$peaks
+    cre_peaks <- readRDS(here("data", "files", "peaks_multieb_marginal.rds"))$peaks
     promoters <- misha.ext::get_promoters(upstream = 2000, downstream = 250)
 
     cre_neighbors <- gintervals.neighbors1(cg_trace_f, cre_peaks)
     prom_neighbors <- gintervals.neighbors1(cg_trace_f, promoters)
 
-    cgd <- tgutil::fread("/home/aviezerl/src/borzoi_finetune/data/mm10_cgdom.csv") |>     
+    cgd <- tgutil::fread(here("data", "files", "mm10_cgdom.csv")) |>
         mutate(start = start - 250, end = end + 250)
     cgd_neighbors <- gintervals.neighbors1(cg_trace_f, cgd)    
 
@@ -654,7 +654,7 @@ create_filters <- function(cg_trace_f) {
 setup_misha <- function() {
     link_dir <- paste0(here(), "/")
     setwd(here())
-    gsetroot("/home/aviezerl/mm10")
+    gsetroot(here("data", "mm10"))
     gdb.reload()
     gdataset.load(paste0(link_dir, "data/mm10/"), force = TRUE)
 

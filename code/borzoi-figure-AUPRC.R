@@ -25,7 +25,7 @@
 # %% vscode={"languageId": "r"}
 # Setup and load required libraries
 library(here)
-devtools::load_all("/home/aviezerl/src/misha")
+library(misha)
 library(misha.ext)
 library(tidyverse)
 library(PRROC)
@@ -38,8 +38,8 @@ options(gmultitasking = FALSE)
 doMC::registerDoMC(cores = 72)
 
 # Source utility functions
-source(here("analysis/borzoi_utils.R"))
-source(here("analysis/borzoi-plot.R"))
+source(here("code", "borzoi_utils.R"))
+source(here("code", "borzoi-plot.R"))
 
 vertical_labs <- function() {
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
@@ -47,7 +47,7 @@ vertical_labs <- function() {
 
 # Setup misha
 setwd(here())
-gsetroot("/home/aviezerl/mm10")
+gsetroot(here("data", "mm10"))
 gdb.reload()
 gdataset.load(here("data/mm10/"), force = T)
 

@@ -1,3 +1,6 @@
+# Data preparation script: CRE accessibility analysis
+# This script was run once to generate data/atac_ap.csv, data/atac_ap_pred.csv, and data/motif_db_ap.tsv.
+# It requires traj_data_with_dinucs.rds from the IceQream/enhflow project (not included in this repo).
 
 library(iceqream)
 library(tidyverse)
@@ -6,10 +9,10 @@ library(misha.ext)
 library(tgutil)
 library(prego)
 library(here)
-traj_data <- readr::read_rds("/home/aviezerl/proj/motif_reg/enhflow/data/traj_data_with_dinucs.rds")
+traj_data <- readr::read_rds(here("data", "files", "traj_data_with_dinucs.rds"))
 all_intervals <- traj_data %>% select(chrom:end, peak_name)
 
-gsetroot("/home/aviezerl/mm10")
+gsetroot(here("data", "mm10"))
 cell_types <- gsub("or_rk_sf.", "", gtrack.ls("^or_rk_sf"))
 cell_types <- cell_types[cell_types != "all"]
 cell_types <- grep("marginal", cell_types, value = TRUE, invert = TRUE)

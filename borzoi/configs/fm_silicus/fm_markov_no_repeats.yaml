@@ -1,0 +1,106 @@
+data:
+  genome_fasta: "genomes/markovius_no_repeats/markovius_no_repeats.fa"
+  chrom_sizes: "mm10/mm10.chrom.sizes"
+  data_matrix: "data/pcg_norm_1000bp.parquet"
+  regions_file: null
+  selected_tracks: null
+  genome_tile_size: 1000000
+  exclude_chroms:
+    - chrM
+  val_chroms:
+    - chr8
+    - chr9
+  test_chroms:
+    - chr14
+    - chr10
+    - chr15
+    - chr4
+  split_by_chrom: true
+
+model:
+  name: "johahi/borzoi-replicate-0"
+  seq_len: 524288
+  pred_len: 196608
+  bin_size: 32
+  freeze_trunk: false
+  num_output_tasks: null
+  species: mouse
+
+training:
+  batch_size: 12        # Linear Probe Batch Size
+  finetune_batch_size: 2 # Fine-tuning Batch Size (Very small -> high noise)
+
+  epochs: 1000
+  learning_rate: 0.0001
+  head_learning_rate: 0.0002
+  finetune_learning_rate: 0.00005
+  optimizer: "adamw"
+  weight_decay: 0.00000001
+  weight_decay_transformer: 0.00000002
+  loss: "cosine_mse_log"
+  loss_center_crop_bp: 196608   # Center-crop loss to avoid boundary effects (paper default)
+  mixed_precision: true
+  clip_grad_norm: 0.2
+  linear_probe_epochs: 40
+  linear_probe_early_stopping_patience: 5
+
+  warmup_steps: 1000
+  early_stopping_patience: 50 
+  min_improvement: 0.0001
+  reduce_lr_on_plateau: false    # Forced Linear Decay for stability
+
+  lr_patience: 10
+  lr_factor: 0.5
+  lr_min: 0.000001
+  num_workers: 4
+  use_sync_batchnorm: false
+
+augmentation:
+  reverse_complement: true
+  shift_max: 3
+  squash_targets: false
+  use_random_crop: true
+  samples_per_region: 5
+  tile_stride: 98304
+
+performance:
+  lazy_loading: true
+  cache_file: null
+
+distributed:
+  enabled: true
+  num_gpus: 8
+
+logging:
+  use_wandb: true
+  wandb_project: "borzoi-finetune"
+  wandb_run_name: "524kb_norm_markov_no_repeats_cosine_mse_log_new_chroms_center_crop_mouse"
+
+  checkpoint_dir: "checkpoints/524kb_norm_markov_no_repeats_cosine_mse_log_new_chroms_center_crop_mouse"
+  save_best_only: false
+
+  eval_every_n: 500
+  save_every_n: 500
+  log_every_n: 10
+
+inference:
+  run_after_training: true
+  mode: "genome"
+  output_dir: "predictions/524kb_norm_markov_no_repeats_cosine_mse_log_new_chroms_center_crop_mouse"
+  output_format:
+    - "bigwig"
+
+  batch_size: 12
+
+  checkpoint: "best_model"
+  use_rc_average: true
+  mixed_precision: true
+  num_workers: 4
+  bigwig_jobs: 10
+
+misha_track:
+  enabled: true
+  groot: "misha_db/mm10"
+  track_prefix: "seq.IQ.pcg.borzoi.finetune_norm_524k_markov_no_repeats_mouse_"
+  suffix: "_cropped"
+  binsize: 32
