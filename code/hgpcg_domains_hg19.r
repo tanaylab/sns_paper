@@ -125,14 +125,14 @@ cgd <- cgd %>%
 
 head(cgd)
 mod$cgdom_ann = cgd
-saveRDS(mod,'./data//files_hg19/chache_mod_hg19.rds')
+saveRDS(mod,'./data/files/files_hg19/chache_mod_hg19.rds')
 return(mod)
     }
 hpcg_init = function()
 {
 	options(gmax.data.size=1e+9)
 
-	cache_file <- "./data/files_hg19/cache_mod_hg19.rds"
+	cache_file <- "./data/files/files_hg19/cache_mod_hg19.rds"
 
 	if (file.exists(cache_file)) {
 		mod <- readRDS(cache_file)
@@ -181,13 +181,13 @@ plot_dense_scatter_ylim_legend_hg19=function (data, x, y, lim_d = 3.3, lim_u = 8
 }
 hpcg_init_epi_track_lib = function(mod)
 {
-	mod$epi_tracks = as.data.frame(fread("data/files_hg19/index_tracks.txt"))
+	mod$epi_tracks = as.data.frame(fread("./data/files/files_hg19/index_tracks.txt"))
 	mod$epi_tracks$short_name_k4 = paste(mod$epi_tracks$short_name,"k4", sep="_")
 	mod$epi_tracks_all = mod$epi_tracks
 	mod$epi_tracks = mod$epi_tracks[mod$epi_tracks$use_comb==1,]
-	mod$k4_track_thresh = read.table("data/files_hg19/track_thresh_k4.txt", 
+	mod$k4_track_thresh = read.table("./data/files/files_hg19/track_thresh_k4.txt", 
         sep = "\t", stringsAsFactors = F, header = T)
-	mod$k27_track_thresh = read.table("data/files_hg19/track_thresh.txt", 
+	mod$k27_track_thresh = read.table("./data/files/files_hg19/track_thresh.txt", 
         sep = "\t", stringsAsFactors = F, header = T)
 
 	return(mod)
@@ -202,7 +202,7 @@ hpcg_update_track_q_thresh = function(mod)
 	}
 	th_mat = do.call('rbind',thresh)
 	rownames(th_mat) = ndx$short_name
-	write.table(th_mat, file="data/track_thresh.txt", quote=F, sep="\t")
+	write.table(th_mat, file="./data/files/track_thresh.txt", quote=F, sep="\t")
 
 	mod$k27_track_thresh = th_mat
 
@@ -216,7 +216,7 @@ hpcg_update_track_q_thresh = function(mod)
 	}
 	th_mat_k4 = do.call('rbind',thresh_k4)
 	rownames(th_mat_k4) = tnm_k4
-	write.table(th_mat_k4, file="data/track_thresh_k4.txt", quote=F, sep="\t")
+	write.table(th_mat_k4, file="./data/files/track_thresh_k4.txt", quote=F, sep="\t")
 	mod$k4_track_thresh = th_mat_k4
 	return(mod)
 }
@@ -255,9 +255,9 @@ hpcg_gen_atac_vt = function (tname = "marginal", w_ext = 140)
 
 hpcg_gen_cg_h_doms = function(mod, force_update=F)
 {
-	if(!force_update & file.exists("data/files_hg19/cgdom_ann.RDS")) {
-		mod$cgdom_ann = readRDS("data/files_hg19/cgdom_ann.RDS")
-		mod$cgd_rpt = readRDS("data/files_hg19/cgd_rpt.RDS")
+	if(!force_update & file.exists("./data/files/files_hg19/cgdom_ann.RDS")) {
+		mod$cgdom_ann = readRDS("./data/files/files_hg19/cgdom_ann.RDS")
+		mod$cgd_rpt = readRDS("./data/files/files_hg19/cgd_rpt.RDS")
 		return(mod)
 	}
 
@@ -358,8 +358,8 @@ hpcg_gen_cg_h_doms = function(mod, force_update=F)
 	mod$cgdom_ann = cgd[!f_mask,]
 	mod$cgd_all = cgd
 	
-	saveRDS(mod$cgdom_ann, "data/files_hg19/cgdom_ann.RDS")
-	saveRDS(mod$cgd_all, "data/files_hg19/cgd_rpt.RDS")
+	saveRDS(mod$cgdom_ann, "./data/files/files_hg19/cgdom_ann.RDS")
+	saveRDS(mod$cgd_all, "./data/files/files_hg19/cgd_rpt.RDS")
 
 	return(mod)
 }

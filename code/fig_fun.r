@@ -4,7 +4,7 @@ fig6_diff_cres = function(mod,nm1,nm2,nm1_a,nm2_a){
 #####
 
 #lm seeds
-seeds = readRDS('./data/lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
+seeds = readRDS('./data/files//lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
 
 
 f_pcg = seeds$modality=='pcg'
@@ -59,7 +59,7 @@ peaks_eb_cen = peaks_eb()
 
 dim(peaks_eb_cen)
 
-peaks_invivo = as.data.frame(fread('./data/atac_ap.csv'))
+peaks_invivo = as.data.frame(fread('./data/files//atac_ap.csv'))
 
 tracks_atac = c('jk.epipcg.multieb24.mcEpiblast','jk.epipcg.multieb24.mcn_meso',
                 'jk.epipcg.multieb24.mcGut',
@@ -82,61 +82,61 @@ names(tracks_atac) = c('multeb_epi','multeb_meso','multeb_endo','atac_eb3','atac
     
     
 if (nm1 == 'e75_ecto_cnt_n' | nm2 =='e75_ecto_cnt_n'){
-if (file.exists('./data/atac_mat_invivo_fig6.rds')) {
-        atac_mat = readRDS('./data/atac_mat_invivo_fig6.rds')
+if (file.exists('./data/files//atac_mat_invivo_fig6.rds')) {
+        atac_mat = readRDS('./data/files//atac_mat_invivo_fig6.rds')
        
     }else {
 atac_mat = gen_atac_mat(tracks_atac =tracks_atac ,atac_peaks = peaks_invivo)
 
-saveRDS(atac_mat,'./data/atac_mat_invivo_fig6.rds')
+saveRDS(atac_mat,'./data/files//atac_mat_invivo_fig6.rds')
         }
 
-message('./data/atac_mat_invivo_fig6.rds')
+message('./data/files//atac_mat_invivo_fig6.rds')
 }else{
 
-if (file.exists('./data/atac_mat_meeb_fig6.rds')) {
-        atac_mat = readRDS('./data/atac_mat_meeb_fig6.rds')
+if (file.exists('./data/files//atac_mat_meeb_fig6.rds')) {
+        atac_mat = readRDS('./data/files//atac_mat_meeb_fig6.rds')
        
     }else {
 atac_mat = gen_atac_mat(tracks_atac =tracks_atac ,atac_peaks = peaks_eb_cen)
 
-saveRDS(atac_mat,'./data/atac_mat_meeb_fig6.rds')
+saveRDS(atac_mat,'./data/files//atac_mat_meeb_fig6.rds')
         }
 
-message('./data/atac_mat_meeb_fig6.rds')
+message('./data/files//atac_mat_meeb_fig6.rds')
 }
 
 
 
 
-if (file.exists('./data/ribo_cov_fig6.rds')) {
-        ribo_cov = readRDS('./data/ribo_cov_fig6.rds')
+if (file.exists('./data/files//ribo_cov_fig6.rds')) {
+        ribo_cov = readRDS('./data/files//ribo_cov_fig6.rds')
        
     }else {
 
 ribo_cov = fig5_ribo_cov_atac(mod=mod,tracks_atac=tracks_atac)
-saveRDS(ribo_cov,'./data/ribo_cov_fig6.rds')
+saveRDS(ribo_cov,'./data/files//ribo_cov_fig6.rds')
         }
 
 
 cov_vect = fig5_track_cov()
 
-if (file.exists('./data/all_seed_k27_fig6.rds')) {
-        all_seed_k27 = readRDS('./data/all_seed_k27_fig6.rds')
+if (file.exists('./data/files//all_seed_k27_fig6.rds')) {
+        all_seed_k27 = readRDS('./data/files//all_seed_k27_fig6.rds')
        
     }else {
 all_seed_k27 = fig5_gext_all_tracks(mod = mod)
-saveRDS(all_seed_k27,'./data/all_seed_k27_fig6.rds')
+saveRDS(all_seed_k27,'./data/files//all_seed_k27_fig6.rds')
         }
 
 
 
 
-if (file.exists('./data/quant_fig6.rds')) {
-        quant = readRDS('./data/quant_fig6.rds')
+if (file.exists('./data/files//quant_fig6.rds')) {
+        quant = readRDS('./data/files//quant_fig6.rds')
        
     }else {
-cg_trace <- readRDS(here("data/cg_trace_mm10.rds"))
+cg_trace <- readRDS(here("./data/files/cg_trace_mm10.rds"))
 
 cg_trace <- gextract.left_join("mapab.umap_k100", intervals = cg_trace, iterator = cg_trace)
 
@@ -162,7 +162,7 @@ for (tr in names_k27){
 
 rownames(quant) = names_k27
 colnames(quant) = c(0.2,.5,.98,.99,.995)
-saveRDS(quant,'./data/quant_fig6.rds')
+saveRDS(quant,'./data/files//quant_fig6.rds')
 }
 
 
@@ -200,7 +200,7 @@ colnames(plt) = c(nm1,nm2,'pred','pred_seed_k27','pred_seed_k4','col','col2')
 
 seeds=cbind(all_seed_k27[, c('chrom','start','end')],plt)
 
-#write.csv(seeds,'./data/fig5_meeb_meso_epi_seeds.csv')
+#write.csv(seeds,'./data/files//fig5_meeb_meso_epi_seeds.csv')
 
 
 
@@ -222,9 +222,9 @@ atac_normed = fig5_norm_atac(atac_mat = atac_mat,nm1_a = nm1_a,nm2_a = nm2_a,rib
 #  theme(legend.position = "none")
 
 
-#write.csv(seeds %>% filter(col=='e75_ecto_cnt_n_loss'),'./data/tableS3_e75_ecto_loss.csv')
+#write.csv(seeds %>% filter(col=='e75_ecto_cnt_n_loss'),'./data/files//tableS3_e75_ecto_loss.csv')
 
-#write.csv(seeds %>% filter(col=='EB5_epi_cnt_n_loss'),'./data/tableS3_EBecto_loss.csv')
+#write.csv(seeds %>% filter(col=='EB5_epi_cnt_n_loss'),'./data/files//tableS3_EBecto_loss.csv')
 
 #emeso
 gg_list = cres_near_pcg_seed(seeds = seeds,nm1 =nm1 ,nm2 = nm2,atac_normed = atac_normed,
@@ -266,7 +266,7 @@ plot_pwm_cluster_heatmap_final <- function(
   nr <- nrow(dist_mat_ord)
   nc <- ncol(dist_mat_ord)
 
-  motifs20 = readRDS('./data/motifs20_fig1.rds')
+  motifs20 = readRDS('./data/files//motifs20_fig1.rds')
 
   rep_idx <- tapply(seq_len(nr), ann_ord$cluster, function(ix) {
     hits <- ix[ rownames(dist_mat_ord)[ix] %in% motifs20 ]
@@ -343,20 +343,20 @@ plot_pwm_cluster_heatmap_final <- function(
 
 eval_linear_models = function(test_lm,resp){
 #BEST big
-modelbig_best = readRDS('./data/lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
+modelbig_best = readRDS('./data/files//lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
 pred_big_best = modelbig_best$k4_pred - modelbig_best$k27_pred
 #message(cor(pred_big_best[test_lm], resp[test_lm],m="p")**2) 
 #message(cor(pred_big_best[!test_lm], resp[!test_lm],m="p")**2)
 resp
 
 #BEST 20 motifs
-model20_best = readRDS('./data/lm_10test_noX_seeds_20mtfs_logist_sqrdi_fig1.rds')
+model20_best = readRDS('./data/files//lm_10test_noX_seeds_20mtfs_logist_sqrdi_fig1.rds')
 pred_20_best = model20_best$k4_pred - model20_best$k27_pred
 #message(cor(pred_20_best[test_lm], resp[test_lm],m="p")**2) 
 #message(cor(pred_20_best[!test_lm], resp[!test_lm],m="p")**2)
 
 #20 motifs center
-model20_cent = readRDS('./data/lm_10test_noX_seeds_20mtfs_logist_sqrdi_center_fig1.rds')
+model20_cent = readRDS('./data/files//lm_10test_noX_seeds_20mtfs_logist_sqrdi_center_fig1.rds')
 pred_20_cent = model20_cent$k4_pred - model20_cent$k27_pred
 #message(cor(pred_20_cent[test_lm], resp[test_lm],m="p")**2) 
 #message(cor(pred_20_cent[!test_lm], resp[!test_lm],m="p")**2)
@@ -1584,7 +1584,7 @@ pcg_plot_energ_heats_hg = function (work, base_dir = "figs/cgd_mod_hg19",legend 
 }
 ####EDF1
 rna_emb_vs_eb = function(){
-mat = readRDS('data/mat_mc_rna_emb_vs_eb_fig1.rds')
+mat = readRDS('./data/files/mat_mc_rna_emb_vs_eb_fig1.rds')
 
 bad_gene_names = c(grep('Eif',rownames(mat),v=T),
 grep("^Gm[0-9]",rownames(mat),v=T),
@@ -1673,9 +1673,9 @@ tracks = c('jk.epipcg.multieb.epi','mut_multi.WT_E65.epi')
 
 ds_a = TRUE
 
-p1 = readRDS('data/peaks_multieb_epi.rds')
+p1 = readRDS('./data/files/peaks_multieb_epi.rds')
 p1 = p1$peaks
-p2 = readRDS('data/peaks_mut_multi_WT_E65_epi.rds')
+p2 = readRDS('./data/files/peaks_mut_multi_WT_E65_epi.rds')
 p2 = p2$peaks
 dim(p2)
 peaks = gintervals.rbind(p1,p2)
@@ -2214,7 +2214,7 @@ if ( "k27_eb4_sum" %in% colnames(cg_trace)) {
     gext[is.na(gext)] = 0
     cg_trace$k27_eb4_sum = (2^gext$k27_eb4_sum) - 6
     message('saving cg_trace')
-    saveRDS(cg_trace,'data/cg_trace_mm10.rds')
+    saveRDS(cg_trace,'./data/files/cg_trace_mm10.rds')
 }
 #gext = gextract("k27_eb4_sum",intervals =cg_trace,iterator = cg_trace)
 #gext[is.na(gext)] = 0
@@ -2545,7 +2545,7 @@ take = track_names
  #       gvtrack.create(ndx$short_name[i], ndx$track_k27[i], "sum")
    #     gvtrack.iterator(ndx$short_name[i], sshift = -140, eshift = 140)
   #  }
-#coverage = readRDS('./data/tracks_cov.rds')
+#coverage = readRDS('./data/files//tracks_cov.rds')
 
 #coverage_v = coverage$cov_vect
 #names(coverage_v) = rownames(coverage)
@@ -5057,7 +5057,7 @@ test_diff_seeds = function(mod)
 
 cres_near_pcg_seed = function(seeds,nm1,nm2,more,delta,atac_normed,nm1_a,nm2_a){
 atac = atac_normed
-#atac = as.data.frame(fread('./data/atac_ap.csv'))
+#atac = as.data.frame(fread('./data/files//atac_ap.csv'))
 #atac = atac[ !atac$chr %in% c('chrY','chrM','chrX'),]
 #seeds$type_diff = ifelse(as.numeric(seeds[,nm1])> 6 & as.numeric(seeds[,nm2])>6 ,'cons','else')
 #seeds$type_diff = ifelse(as.numeric(seeds[,nm1])> more & #(as.numeric(seeds[,nm1])-as.numeric(seeds[,nm2]))>delta ,paste0(nm2,'_loss'),seeds$type_diff)
@@ -5108,7 +5108,7 @@ gg=neigh_comb_f %>%
 }
 
 cres_near_pcg_seed_iq_pred = function(seeds,nm1,nm2,more,delta){
-atac = as.data.frame(fread('./data/atac_ap_pred.csv'))
+atac = as.data.frame(fread('./data/files//atac_ap_pred.csv'))
 atac = atac[ !atac$chr %in% c('chrY','chrM','chrX'),]
 seeds$type_diff = ifelse(as.numeric(seeds[,nm1])> 6 & as.numeric(seeds[,nm2])>6 ,'cons','else')
 seeds$type_diff = ifelse(as.numeric(seeds[,nm1])> more & (as.numeric(seeds[,nm1])-as.numeric(seeds[,nm2]))>delta ,paste0(nm2,'_loss'),seeds$type_diff)
@@ -5158,7 +5158,7 @@ gg=neigh_comb_f %>%
 
 plt_pwm_in_a_peaks = function(motif_db,seeds,nm1,nm2,more,delta,atac_normed,nm1_a,nm2_a){
 atac = atac_normed
-#atac = as.data.frame(fread('./data/atac_ap.csv'))
+#atac = as.data.frame(fread('./data/files//atac_ap.csv'))
 #atac = atac[ !atac$chr %in% c('chrY','chrM','chrX'),]
 mots = unique(motif_db$motif)
     for (mot in mots) {
@@ -6647,4 +6647,198 @@ plt_regionAT_ds_cg_cons_gg_nlg = function (mod, chr, st, end, k, ds_k27 = TRUE, 
         return(p_all)
     }
     ## --- END ggplot replacement ---
+}
+
+plot_bernstein_transfections_pcg = function(cgi_fcs = 'BAC_hZFPM2__harbor_chr18:55692800-55696200',results,
+                                       start =55692800 ,
+                                        end = 55696200,
+                                       region_id_c = 'harbor_chr18:55692800-55696200',
+                                       exp5 = 20e3,
+                                        exp3 = 20e3
+                                        
+                                       ){
+
+tgutil::sps(14, 5)
+#len = trans_intervs %>% filter(name==cgi_fcs_orig) %>% select(len)%>% pull()
+len = end - start
+cent_transf = start + (len)/2 ##center of transfection
+
+
+
+rect_df <- data.frame(
+  xmin = cent_transf - (len/2),
+  xmax = cent_transf + (len/2),
+  ymin = -Inf,
+  ymax = Inf
+)
+temp = results %>%
+  filter(region_id==region_id_c & start > cent_transf-exp5 & end < cent_transf+exp3) %>% as.data.frame()
+
+temp = temp[,c('chrom','start','end','observed_EB4_cnt','baseline_EB4_cnt',paste0(cgi_fcs,'_EB4_cnt'))]
+colnames(temp) = c('chrom','start','end','k27','borzoi_k27','k27_transfect')
+temp %>%
+  gather("type", "value", -(chrom:end)) %>%
+  ggplot(aes(x = start, y = value, color = type)) +
+  geom_rect(
+    data = rect_df,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    inherit.aes = FALSE,
+    alpha = 0.15,
+    fill = "grey50",
+    color = NA
+  ) +
+    scale_color_manual(values = c('darkviolet','darkblue','darkgreen'))+
+  geom_line(linewidth=.7) +
+coord_cartesian(ylim = c(4.8,8))+
+  labs(x = "Start", y = "PcG") +
+  theme_bw() +
+  theme(
+    axis.title.x = element_text(size = 16, face = "bold"),
+    axis.title.y = element_text(size = 16, face = "bold"),
+    axis.text.x  = element_text(size = 13, face = "bold"),
+    axis.text.y  = element_text(size = 13, face = "bold")
+  )
+}
+
+plot_bernstein_transfections_txg = function(cgi_fcs = 'BAC_hZFPM2__harbor_chr18:55692800-55696200',results,
+                                       start =55692800 ,
+                                        end = 55696200,
+                                       region_id_c = 'harbor_chr18:55692800-55696200',
+                                       exp5 = 20e3,
+                                        exp3 = 20e3
+                                        
+                                       ){
+
+tgutil::sps(14, 5)
+#len = trans_intervs %>% filter(name==cgi_fcs_orig) %>% select(len)%>% pull()
+len = end - start
+cent_transf = start + (len)/2 ##center of transfection
+
+
+
+rect_df <- data.frame(
+  xmin = cent_transf - (len/2),
+  xmax = cent_transf + (len/2),
+  ymin = -Inf,
+  ymax = Inf
+)
+temp = results %>%
+  filter(region_id==region_id_c & start > cent_transf-exp5 & end < cent_transf+exp3) %>% as.data.frame()
+
+temp = temp[,c('chrom','start','end','observed_EB4_cnt_k4','baseline_EB4_cnt_k4',paste0(cgi_fcs,'_EB4_cnt_k4'))]
+colnames(temp) = c('chrom','start','end','k4','borzoi_k4','k4_transfect')
+temp %>%
+  gather("type", "value", -(chrom:end)) %>%
+  ggplot(aes(x = start, y = log2(1+value), color = type)) +
+  geom_rect(
+    data = rect_df,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    inherit.aes = FALSE,
+    alpha = 0.15,
+    fill = "grey50",
+    color = NA
+  ) +
+  geom_line(linewidth=.7) +
+    scale_color_manual(values = c('darkviolet','darkred','darkgreen'))+
+coord_cartesian(ylim = c(0,8))+
+  labs(x = "Start", y = "TxG") +
+  theme_bw() +
+  theme(
+    axis.title.x = element_text(size = 16, face = "bold"),
+    axis.title.y = element_text(size = 16, face = "bold"),
+    axis.text.x  = element_text(size = 13, face = "bold"),
+    axis.text.y  = element_text(size = 13, face = "bold")
+  )
+}
+plt_schub_cgi_pcg = function(results=results1,cgi_fcs_orig = 'CGI10', cgi_fcs = 'CGI10',cent_transf = 130098008 ,
+                             exp5 = 10e3,exp3 = 10e3){
+
+tgutil::sps(14, 5)
+len = trans_intervs %>% filter(name==cgi_fcs_orig) %>% select(len)%>% pull()
+
+cent_transf = 130098008 ##center of transfection
+
+
+rect_df <- data.frame(
+  xmin = cent_transf - (len/2),
+  xmax = cent_transf + (len/2),
+  ymin = -Inf,
+  ymax = Inf
+)
+temp = results %>%
+  filter(region_id=='region_1' & start > cent_transf-exp5 & end < cent_transf+exp3) %>% as.data.frame()
+
+temp = temp[,c('chrom','start','end','observed_EB4_cnt','baseline_EB4_cnt',paste0(cgi_fcs,'_EB4_cnt'))]
+colnames(temp) = c('chrom','start','end','k27','borzoi_k27','k27_transfect')
+gg = temp %>%
+  gather("type", "value", -(chrom:end)) %>%
+  ggplot(aes(x = start, y = value, color = type)) +
+  geom_rect(
+    data = rect_df,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    inherit.aes = FALSE,
+    alpha = 0.15,
+    fill = "grey50",
+    color = NA
+  ) +ggtitle(cgi_fcs)+
+    scale_color_manual(values = c('darkviolet','darkblue','darkgreen'))+
+  geom_line(linewidth=.7) +
+coord_cartesian(ylim = c(4.8,8))+
+  labs(x = "Start", y = "PcG") +
+  theme_classic() +
+  theme(
+    axis.title.x = element_text(size = 16, face = "bold"),
+    axis.title.y = element_text(size = 16, face = "bold"),
+    axis.text.x  = element_text(size = 13, face = "bold"),
+    axis.text.y  = element_text(size = 13, face = "bold")
+  )
+    print(gg)
+    return(gg)
+}
+
+plt_schub_cgi_txg = function(results=results1,cgi_fcs_orig = 'CGI10', cgi_fcs = 'CGI10',cent_transf = 130098008 ,
+                             exp5 = 10e3,exp3 = 10e3){
+tgutil::sps(14, 5)
+len = trans_intervs %>% filter(name==cgi_fcs_orig) %>% select(len)%>% pull()
+
+##center of transfection
+
+
+
+rect_df <- data.frame(
+  xmin = cent_transf - (len/2),
+  xmax = cent_transf + (len/2),
+  ymin = -Inf,
+  ymax = Inf
+)
+temp = results %>%
+  filter(region_id=='region_1' & start > cent_transf-exp5 & end < cent_transf+exp3) %>% as.data.frame()
+
+temp = temp[,c('chrom','start','end','observed_EB4_cnt_k4','baseline_EB4_cnt_k4',paste0(cgi_fcs,'_EB4_cnt_k4'))]
+colnames(temp) = c('chrom','start','end','k4','borzoi_k4','k4_transfect')
+gg=temp %>%
+  gather("type", "value", -(chrom:end)) %>%
+  ggplot(aes(x = start, y = log2(1+value), color = type)) +
+  geom_rect(
+    data = rect_df,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    inherit.aes = FALSE,
+    alpha = 0.15,
+    fill = "grey50",
+    color = NA
+  ) +
+  geom_line(linewidth=.7) +ggtitle(cgi_fcs)+
+      scale_color_manual(values = c('darkviolet','darkred','darkgreen'))+
+coord_cartesian(ylim = c(0,8))+
+  labs(x = "Start", y = "TxG") +
+  theme_classic() +
+  theme(
+    axis.title.x = element_text(size = 16, face = "bold"),
+    axis.title.y = element_text(size = 16, face = "bold"),
+    axis.text.x  = element_text(size = 13, face = "bold"),
+    axis.text.y  = element_text(size = 13, face = "bold")
+      
+  )
+    print(gg)
+    return(gg)
 }

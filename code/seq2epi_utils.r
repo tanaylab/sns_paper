@@ -68,7 +68,7 @@ return(df_d)
 annotate_misses = function(){
 miss = mod$gw$over_doms
 
-#write.csv(miss3,'./data/gw_01back_misses.csv')
+#write.csv(miss3,'./data/files/gw_01back_misses.csv')
 
 gintervals.ls("intervs.global.rmsk_simple_repeat")
 
@@ -237,12 +237,12 @@ cv_res_k4 <- loco_cv(y = y, x = x, chrom = chrom)
 cv_res_k4$overall
 
 cv_res_k4$per_chrom
-if (!file.exists("./data/lm_cv_loco_k4_fig1.rds")) {
-  saveRDS(cv_res_k4, "./data/lm_cv_loco_k4_fig1.rds")
+if (!file.exists("./data/files/lm_cv_loco_k4_fig1.rds")) {
+  saveRDS(cv_res_k4, "./data/files/lm_cv_loco_k4_fig1.rds")
 }
 
-if (!file.exists("./data/lm_cv_loco_fig1.rds")) {
-  saveRDS(cv_res, "./data/lm_cv_loco_fig1.rds")
+if (!file.exists("./data/files/lm_cv_loco_fig1.rds")) {
+  saveRDS(cv_res, "./data/files/lm_cv_loco_fig1.rds")
 }
 return(list(loco_pcg = cv_res, loco_trxg = cv_res_k4))
 }
@@ -316,8 +316,8 @@ save_rds_if_missing <- function(x, path) {
 
 prepare_model_features <- function(
     mod,
-    dinucs_path = "./data/seqmod_loc_feats_dinucs_fig1_lm.rds",
-    motifs20_path = "./data/motifs20_fig1.rds",
+    dinucs_path = "./data/files/seqmod_loc_feats_dinucs_fig1_lm.rds",
+    motifs20_path = "./data/files/motifs20_fig1.rds",
     motif_mode = c("all", "motif20"),
     feature_mode = c("all_bins", "center_only")
 ) {
@@ -325,7 +325,7 @@ prepare_model_features <- function(
   feature_mode <- match.arg(feature_mode)
 
   dinucs <- readRDS(dinucs_path)
-  mod$seqmod_loc_feats_raw <- readRDS("./data/seqmod_loc_feats_raw_fig1_lm.rds")
+  mod$seqmod_loc_feats_raw <- readRDS("./data/files/seqmod_loc_feats_raw_fig1_lm.rds")
   cgd <- mod$cgdom_ann
   f_x <- cgd$chrom == "chrX"
 
@@ -493,7 +493,7 @@ fit_model_and_plot <- function(
 get_pmw_min_pv_per_cl = function(hc_list){
 set.seed(42)
 ##load the pwms and select the most enriched, 458 motifs
-	mod$mot_stats[["cgd_inner"]] = readRDS("data/mot_stats_cgd_inner.RDS")
+	mod$mot_stats[["cgd_inner"]] = readRDS("./data/files/mot_stats_cgd_inner.RDS")
 	mstm = mod$mot_stats[["cgd_inner"]]
 	mstm$dist_bin = mstm$dist_bin + 20 - 11
 	mstm = mstm[!is.na(mstm$pv),]
@@ -630,7 +630,7 @@ norm_CnT_loess_k4 = function(track, atac_nm, winsize, out_control_track = NULL){
 	gvtrack.iterator("atac_win", sshift=-winsize, eshift=winsize)
 	gvtrack.create("tr_2000", track, "avg")
 	gvtrack.iterator("tr_2000", sshift=-1000, eshift=1000)		
-	tss = readRDS('./data/tss_ref.rds')
+	tss = readRDS('./data/files/tss_ref.rds')
 	strict_txg_d = tss
 	
 	print("yalla")
@@ -683,8 +683,8 @@ norm_CnT_loess_k4 = function(track, atac_nm, winsize, out_control_track = NULL){
          }
 init_pipe = function(override = F)
 {	
-	if(!override & file.exists("data/cache_mod.RDS")) {
-	mod = readRDS("data/cache_mod.RDS")
+	if(!override & file.exists("./data/files/cache_mod.RDS")) {
+	mod = readRDS("./data/files/cache_mod.RDS")
 	compute_track_quantiles(mod = mod)
 	message("done track quant")
 	compute_cnt_quantiles(mod = mod)
@@ -694,15 +694,15 @@ init_pipe = function(override = F)
 	
 	return(mod)
 	}else{ 
-	message("data/cache_mod.RDS doesn't exist. Add it to the directory or use init_pipe_new()")
+	message("./data/files/cache_mod.RDS doesn't exist. Add it to the directory or use init_pipe_new()")
 	
 	}
 }
 
 init_pipe_new = function(override = F)
 {	
-	if(!override & file.exists("./data/cache_mod_new.RDS")) {
-		return(readRDS("./data/cache_mod_new.RDS"))
+	if(!override & file.exists("./data/files/cache_mod_new.RDS")) {
+		return(readRDS("./data/files/cache_mod_new.RDS"))
 	}else{ 
 	mod = pcg_init() 
 	message("done base")
@@ -731,7 +731,7 @@ init_pipe_new = function(override = F)
 	mod$cgdom_ann$ID = 1:nrow(mod$cgdom_ann)
 	mod$test_chroms = c("chr2", "chr8", "chr12", "chr18")
 	message("saving")
-	saveRDS(mod, file="./data/cache_mod_new.RDS")
+	saveRDS(mod, file="./data/files/cache_mod_new.RDS")
 	return(mod)
 	
 	}
@@ -742,14 +742,14 @@ pcg_init = function()
 {
 	mod = list()
 
-	mod$tss_jk = readRDS("data/tss_jk.RDS")
+	mod$tss_jk = readRDS("./data/files/tss_jk.RDS")
 	#mod$tss = gintervals.load("intervs.global.tss")
 	mod$tss = gintervals.load("intervs.global.tss_10x")
 	mod$exon = gintervals.load("intervs.global.exon")
 	options(gmax.data.size=1e+9)
 	options(scipen=999)
 
-	if(!file.exists("data/multi/npeaks.RDS")) {
+	if(!file.exists("./data/files/multi/npeaks.RDS")) {
 		mod$raw_npeaks = join_norm_peaks()
 		mod$npeaks = mod$raw_npeaks
 		gen_track_vext()
@@ -758,47 +758,47 @@ pcg_init = function()
 								"atac_ext", 140,min_space=100)
 		}
 		mod = add_peak_cggc(mod)
-		saveRDS(mod$raw_npeaks, file="data/multi/npeaks.RDS")
-		saveRDS(mod$npeaks, file="data/multi/npeaks_canonic.RDS")
+		saveRDS(mod$raw_npeaks, file="./data/files/multi/npeaks.RDS")
+		saveRDS(mod$npeaks, file="./data/files/multi/npeaks_canonic.RDS")
 	} else {
-		mod$raw_npeaks = readRDS(file="data/multi/npeaks.RDS")
-		mod$npeaks = readRDS(file="data/multi/npeaks_canonic.RDS")
+		mod$raw_npeaks = readRDS(file="./data/files/multi/npeaks.RDS")
+		mod$npeaks = readRDS(file="./data/files/multi/npeaks_canonic.RDS")
 	}
 	mod$npeaks_tss = mod$npeaks[mod$npeaks$d_tss==0,]
-	if(!file.exists("data/multi/multi_type_cov.RDS")) {
+	if(!file.exists("./data/files/multi/multi_type_cov.RDS")) {
 		mod  = collect_cov_r(mod)
 	} else {
-		mod$cov_stat = readRDS(file="data/multi/multi_type_cov.RDS")
+		mod$cov_stat = readRDS(file="./data/files/multi/multi_type_cov.RDS")
 		rownames(mod$cov_stat) = mod$cov_stat$nm
-		mod$cov_peak_chr = readRDS(file="data/multi/cov_peak_chr.RDS")
-		mod$cov_chr = readRDS(file="data/multi/cov_chr.RDS")
+		mod$cov_peak_chr = readRDS(file="./data/files/multi/cov_peak_chr.RDS")
+		mod$cov_chr = readRDS(file="./data/files/multi/cov_chr.RDS")
 	}
 
 	#mod = gen_cgi(mod)
 	#mod = gen_ctcf(mod)
 	#mod = init_exp(mod)
 
-	mod$emb_type_legc =  readRDS(file="data/spatwt_type_legc.RDS")
- 	mod$emb_mc_legc = readRDS(file="data/spatwt_mc_legc.RDS")
-	mod$mat_eb_rna = readRDS("data/L67_bulk_per_cond.RDS")
+	mod$emb_type_legc =  readRDS(file="./data/files/spatwt_type_legc.RDS")
+ 	mod$emb_mc_legc = readRDS(file="./data/files/spatwt_mc_legc.RDS")
+	mod$mat_eb_rna = readRDS("./data/files/L67_bulk_per_cond.RDS")
 	eb_umi = mod$mat_eb_rna[,"wt_t_wt_d3"]
 	eb_umi_n = eb_umi/sum(eb_umi)
 	mod$eb_legc = log2(1e-5+eb_umi_n)
 
 	# message("building ehs modes")
-	#if(!file.exists("data/epimod_ehs.RDS")) {
+	#if(!file.exists("./data/files/epimod_ehs.RDS")) {
 	#	mod = build_epi_hotspots_classes(mod)
-	#	saveRDS(mod$ehs, "data/epimod_ehs.RDS")
+	#	saveRDS(mod$ehs, "./data/files/epimod_ehs.RDS")
 	#} else {
-	#	mod$ehs = readRDS("data/epimod_ehs.RDS")
+	#	mod$ehs = readRDS("./data/files/epimod_ehs.RDS")
 	#}
 
-#	if(file.exists("data/peak_stat.RDS")) {
-#		mod$peak_stat = readRDS(file="data/peak_stat.RDS")
+#	if(file.exists("./data/files/peak_stat.RDS")) {
+#		mod$peak_stat = readRDS(file="./data/files/peak_stat.RDS")
 #	} else {
 #		peak_stat = gen_peaks_z_mat(mod, npeaks)
 #		mod$peak_stat = peak_stat
-#		saveRDS(peak_stat, file="data/peak_stat.RDS")
+#		saveRDS(peak_stat, file="./data/files/peak_stat.RDS")
 #	}
 	return(mod)
 }
@@ -813,17 +813,17 @@ gen_track_vext = function(tname = "marginal", w_ext = 140)
 }
 compute_track_quantiles = function(mod)
 {
-	ndx = as.data.frame(fread("./data/index_tracks.txt"))	
+	ndx = as.data.frame(fread("./data/files/index_tracks.txt"))	
 	
 	for(i in 1:nrow(ndx)) {
 #		message("running ", ndx$short_name[i])
 		gvtrack.create(ndx$short_name[i], ndx$track_k27[i], "avg") 
 		gvtrack.iterator(ndx$short_name[i], sshift = -500, eshift= 500)
 	}
-	if(file.exists("./data/track_thresh.txt")) {
-		mod$k27_track_thresh_cnt = read.table("./data/track_thresh.txt", sep="\t", stringsAsFactors=F,header=T)
+	if(file.exists("./data/files/track_thresh.txt")) {
+		mod$k27_track_thresh_cnt = read.table("./data/files/track_thresh.txt", sep="\t", stringsAsFactors=F,header=T)
 		th_mat = mod$k27_track_thresh_cnt
-		mod$k4_track_thresh_cnt = read.table("./data/track_thresh_k4.txt", sep="\t", stringsAsFactors=F,header=T)
+		mod$k4_track_thresh_cnt = read.table("./data/files/track_thresh_k4.txt", sep="\t", stringsAsFactors=F,header=T)
 	} else {
 		thresh = list()
 		for(i in 1:nrow(ndx)) {
@@ -831,7 +831,7 @@ compute_track_quantiles = function(mod)
 		}
 		th_mat = do.call('rbind',thresh)
 		rownames(th_mat) = ndx$short_name
-		write.table(th_mat, file="./data/track_thresh.txt", quote=F, sep="\t")
+		write.table(th_mat, file="./data/files/track_thresh.txt", quote=F, sep="\t")
 		mod$k27_track_thresh_cnt = th_mat
 		thresh_k4 = list()
 		tnm_k4 = gen_k4_vt_cnt(mod)
@@ -840,7 +840,7 @@ compute_track_quantiles = function(mod)
 		}
 		th_mat_k4 = do.call('rbind',thresh_k4)
 		rownames(th_mat_k4) = tnm_k4
-		write.table(th_mat_k4, file="./data/track_thresh_k4.txt", quote=F, sep="\t")
+		write.table(th_mat_k4, file="./data/files/track_thresh_k4.txt", quote=F, sep="\t")
 		mod$k4_track_thresh_cnt = th_mat_k4
 	}
 	#return(mod)
@@ -848,17 +848,17 @@ compute_track_quantiles = function(mod)
 
 compute_cnt_quantiles = function(mod)
 {
-	ndx = as.data.frame(fread("./data/index_tracks_cnt.txt"))	
+	ndx = as.data.frame(fread("./data/files/index_tracks_cnt.txt"))	
 	
 	for(i in 1:nrow(ndx)) {
 #		message("running ", ndx$short_name[i])
 		gvtrack.create(ndx$short_name[i], ndx$track_k27[i], "avg") 
 		gvtrack.iterator(ndx$short_name[i], sshift = -500, eshift= 500)
 	}
-	if(file.exists("./data/track_thresh_cnt.txt")) {
-		mod$k27_track_thresh_cnt = read.table("./data/track_thresh_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
+	if(file.exists("./data/files/track_thresh_cnt.txt")) {
+		mod$k27_track_thresh_cnt = read.table("./data/files/track_thresh_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
 		th_mat = mod$k27_track_thresh_cnt
-		mod$k4_track_thresh_cnt = read.table("./data/track_thresh_k4_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
+		mod$k4_track_thresh_cnt = read.table("./data/files/track_thresh_k4_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
 	} else {
 		thresh = list()
 		for(i in 1:nrow(ndx)) {
@@ -866,7 +866,7 @@ compute_cnt_quantiles = function(mod)
 		}
 		th_mat = do.call('rbind',thresh)
 		rownames(th_mat) = ndx$short_name
-		write.table(th_mat, file="./data/track_thresh_cnt.txt", quote=F, sep="\t")
+		write.table(th_mat, file="./data/files/track_thresh_cnt.txt", quote=F, sep="\t")
 		mod$k27_track_thresh_cnt = th_mat
 		thresh_k4 = list()
 		tnm_k4 = gen_k4_vt_cnt(mod)
@@ -875,14 +875,14 @@ compute_cnt_quantiles = function(mod)
 		}
 		th_mat_k4 = do.call('rbind',thresh_k4)
 		rownames(th_mat_k4) = tnm_k4
-		write.table(th_mat_k4, file="./data/track_thresh_k4_cnt.txt", quote=F, sep="\t")
+		write.table(th_mat_k4, file="./data/files/track_thresh_k4_cnt.txt", quote=F, sep="\t")
 		mod$k4_track_thresh_cnt = th_mat_k4
 	}
 	#return(mod)
 }
 gen_k4_vt_cnt = function(mod) 
 {
-	ndx = as.data.frame(fread("./data/index_tracks_cnt.txt"))
+	ndx = as.data.frame(fread("./data/files/index_tracks_cnt.txt"))
 	for(i in 1:nrow(ndx)) {
 		if(!is.na(ndx$track_k4[i])) {
 			gvtrack.create(ndx$short_name_k4[i], ndx$track_k4[i], "sum") 
@@ -895,15 +895,15 @@ gen_k4_vt_cnt = function(mod)
 	return(k4_tns)
 }
 compute_tot_cnt_cov_vs_hcg = function(mod){
-ndx = as.data.frame(fread("./data/index_tracks_cnt.txt"))		
+ndx = as.data.frame(fread("./data/files/index_tracks_cnt.txt"))		
 	for(i in 1:nrow(ndx)) {
 #		message("running ", ndx$short_name[i])
 		gvtrack.create(ndx$short_name[i], ndx$track_k27[i], "sum") 
 		
         }
 
-	if(file.exists("./data/track_cov_cnt.txt")) {
-		mod$cnt_track_cov = read.table("data/track_cov_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
+	if(file.exists("./data/files/track_cov_cnt.txt")) {
+		mod$cnt_track_cov = read.table("./data/files/track_cov_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
 		
 
 	} else {
@@ -926,7 +926,7 @@ ndx = as.data.frame(fread("./data/index_tracks_cnt.txt"))
 
         
         th_mat = cbind(th_mat,as.numeric(colSums(gext[,-c(1,2,3,ncol(gext))])))
-		write.table(th_mat, file="./data/track_cov_cnt.txt", quote=F, sep="\t")
+		write.table(th_mat, file="./data/files/track_cov_cnt.txt", quote=F, sep="\t")
 		mod$cnt_track_cov = th_mat       
 	}
  return(mod)
@@ -961,7 +961,7 @@ gtrack.create_sparse(track = track_nm,
                      intervals = data_tr,values = data_tr$pred)
 }
 compute_tot_cnt_k4_cov_vs_hcg = function(mod){
-ndx = as.data.frame(fread("./data/index_tracks_cnt.txt"))
+ndx = as.data.frame(fread("./data/files/index_tracks_cnt.txt"))
 ndx = ndx[!is.na(ndx$track_k4),]	
 	for(i in 1:nrow(ndx)) {
 #		message("running ", ndx$short_name[i])
@@ -969,8 +969,8 @@ ndx = ndx[!is.na(ndx$track_k4),]
 		
         }
 
-	if(file.exists("./data/track_cov_cnt_k4.txt")) {
-		mod$cnt_track_cov_k4 = read.table("data/track_cov_cnt_k4.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)###be aware colnames shifted
+	if(file.exists("./data/files/track_cov_cnt_k4.txt")) {
+		mod$cnt_track_cov_k4 = read.table("./data/files/track_cov_cnt_k4.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)###be aware colnames shifted
 		colnames(mod$cnt_track_cov_k4) = c('Total.intervals','NaN.intervals','Min','Max','Sum','Mean','Std.dev','X')
 
 	} else {
@@ -993,7 +993,7 @@ ndx = ndx[!is.na(ndx$track_k4),]
 
         
         th_mat = cbind(th_mat,as.numeric(colSums(gext[,-c(1,2,3,ncol(gext))])))
-		write.table(th_mat, file="./data/track_cov_cnt_k4.txt", quote=F, sep="\t")
+		write.table(th_mat, file="./data/files/track_cov_cnt_k4.txt", quote=F, sep="\t")
 		mod$cnt_track_cov_k4 = th_mat       
 	}
  return(mod)
@@ -1007,8 +1007,8 @@ ndx = mod$track_atac_ribo
 		
         }
 
-	if(file.exists("./data/track_cov_atac.txt")) {
-		mod$atac_track_cov = read.table("./data/track_cov_atac.txt", sep="\t", stringsAsFactors=F,header=T)
+	if(file.exists("./data/files/track_cov_atac.txt")) {
+		mod$atac_track_cov = read.table("./data/files/track_cov_atac.txt", sep="\t", stringsAsFactors=F,header=T)
 		
 
 	} else {
@@ -1031,7 +1031,7 @@ ndx = mod$track_atac_ribo
 
         
         th_mat = cbind(th_mat,as.numeric(colSums(gext[,-c(1,2,3,ncol(gext))])))
-		write.table(th_mat, file="./data/track_cov_atac.txt", quote=F, sep="\t")
+		write.table(th_mat, file="./data/files/track_cov_atac.txt", quote=F, sep="\t")
 		mod$atac_track_cov = th_mat       
 	}
  return(mod)
@@ -1072,7 +1072,7 @@ pcg_gen_cgd_tiling = function(mod)
 pcg_screen_motifs = function(mod, doms, foc_tiles, dist_bins, label)
 {
 	set.seed(42)
-	load("data/motif_db.rda")
+	load("./data/files/motif_db.rda")
 	motif_db_s <- motif_db %>% filter(dataset %in% c("HOMER", "JASPAR", "JOLMA"))
 
 	mot_hits = c()
@@ -1121,7 +1121,7 @@ pcg_screen_motifs = function(mod, doms, foc_tiles, dist_bins, label)
 				all_stats = rbind(all_stats, cbind(colnames(stats), rep(sbin,ncol(stats)), t(stats)))
 			}
 		}
-		saveRDS(all_stats,"data/mot_stats.RDS")
+		saveRDS(all_stats,"./data/files/mot_stats.RDS")
 	}
 	mot_stats = data.frame(motif = all_stats[,1], 
 							  bin = as.numeric(all_stats[,2]),
@@ -1138,7 +1138,7 @@ pcg_screen_motifs = function(mod, doms, foc_tiles, dist_bins, label)
 		mod$mot_stat = list()
 	}
 	mod$mot_stats[[label]] = mot_stats
-	saveRDS(mot_stats,sprintf("data/mot_stats_%s.RDS", label))
+	saveRDS(mot_stats,sprintf("./data/files/mot_stats_%s.RDS", label))
 	return(mod)
 }
 
@@ -1166,7 +1166,7 @@ pcg_screen_cgd_dom_mots = function(mod, dist_mod = "tss", test_chroms=mod$test_c
 pcg_build_local_seq_feats = function(mod, add_dinucs=F)
 {
 	set.seed(42)
-	mod$mot_stats[["cgd_inner"]] = readRDS("data/mot_stats_cgd_inner.RDS")
+	mod$mot_stats[["cgd_inner"]] = readRDS("./data/files/mot_stats_cgd_inner.RDS")
 	mstm = mod$mot_stats[["cgd_inner"]]
 	mstm$dist_bin = mstm$dist_bin + 20 - 11
 	mstm = mstm[!is.na(mstm$pv),]
@@ -1318,7 +1318,7 @@ pcg_build_local_seq_feats = function(mod, add_dinucs=F)
 pcg_build_local_seq_feats_raw = function(mod,mot_db, add_dinucs=F)
 {
 	set.seed(42)
-	mod$mot_stats[["cgd_inner"]] = readRDS("data/mot_stats_cgd_inner.RDS")
+	mod$mot_stats[["cgd_inner"]] = readRDS("./data/files/mot_stats_cgd_inner.RDS")
 	mstm = mod$mot_stats[["cgd_inner"]]
 	mstm$dist_bin = mstm$dist_bin + 20 - 11
 	mstm = mstm[!is.na(mstm$pv),]
@@ -1486,7 +1486,7 @@ mots = unique(mot_db_f$motif)
 pcg_build_local_seq_feats_q_pmax = function(mod, add_dinucs=F)
 {
 	set.seed(42)
-	mod$mot_stats[["cgd_inner"]] = readRDS("data/mot_stats_cgd_inner.RDS")
+	mod$mot_stats[["cgd_inner"]] = readRDS("./data/files/mot_stats_cgd_inner.RDS")
 	mstm = mod$mot_stats[["cgd_inner"]]
 	mstm$dist_bin = mstm$dist_bin + 20 - 11
 	mstm = mstm[!is.na(mstm$pv),]
@@ -1641,23 +1641,23 @@ pcg_build_local_seq_feats_q_pmax = function(mod, add_dinucs=F)
 
 pcg_init_epi_track_lib = function(mod)
 {
-	mod$epi_tracks = as.data.frame(fread("data/index_tracks.txt"))
-    mod$k27_track_thresh = read.table("data/track_thresh.txt",row.names=1, 
+	mod$epi_tracks = as.data.frame(fread("./data/files/index_tracks.txt"))
+    mod$k27_track_thresh = read.table("./data/files/track_thresh.txt",row.names=1, 
         sep = "\t", stringsAsFactors = F, header = T)
 	mod$epi_tracks$short_name_k4 = paste(mod$epi_tracks$short_name,"k4", sep="_")
 	mod$epi_tracks_all = mod$epi_tracks
 	mod$epi_tracks = mod$epi_tracks[mod$epi_tracks$use_comb==1,]
-	mod$epi_tracks_cnt = as.data.frame(fread("data/index_tracks_cnt.txt"))
-	mod$epi_tracks_atac = as.data.frame(fread('data/index_tracks_atac.csv'))
-	mod$atac_track_thresh = read.table("data/track_thresh_atac.txt", sep="\t", stringsAsFactors=F,header=T)
-	mod$track_atac_ribo = fread("data/index_tracks_atac.csv", stringsAsFactors=F)
-	mod$k27_track_thresh_cnt = read.table("data/track_thresh_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
-	mod$k4_track_thresh_cnt = read.table("data/track_thresh_k4_cnt.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)
-	mod$k4_track_thresh = read.table("data/track_thresh_k4_cnt.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)
-	#mod$cnt_track_cov = read.table("data/track_cov_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
-		#mod$cnt_track_cov_k4 = read.table("data/track_cov_cnt_k4.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)###be aware colnames shifted
+	mod$epi_tracks_cnt = as.data.frame(fread("./data/files/index_tracks_cnt.txt"))
+	mod$epi_tracks_atac = as.data.frame(fread('./data/files/index_tracks_atac.csv'))
+	mod$atac_track_thresh = read.table("./data/files/track_thresh_atac.txt", sep="\t", stringsAsFactors=F,header=T)
+	mod$track_atac_ribo = fread("./data/files/index_tracks_atac.csv", stringsAsFactors=F)
+	mod$k27_track_thresh_cnt = read.table("./data/files/track_thresh_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
+	mod$k4_track_thresh_cnt = read.table("./data/files/track_thresh_k4_cnt.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)
+	mod$k4_track_thresh = read.table("./data/files/track_thresh_k4_cnt.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)
+	#mod$cnt_track_cov = read.table("./data/files/track_cov_cnt.txt", sep="\t", stringsAsFactors=F,header=T)
+		#mod$cnt_track_cov_k4 = read.table("./data/files/track_cov_cnt_k4.txt", sep="\t", stringsAsFactors=F,header=T,row.names = 1)###be aware colnames shifted
 		#colnames(mod$cnt_track_cov_k4) = c('Total.intervals','NaN.intervals','Min','Max','Sum','Mean','Std.dev','X')
-mod$atac_track_cov = read.table("data/track_cov_atac.txt", sep="\t", stringsAsFactors=F,header=T)
+mod$atac_track_cov = read.table("./data/files/track_cov_atac.txt", sep="\t", stringsAsFactors=F,header=T)
 				
 
 
@@ -1672,7 +1672,7 @@ compute_specific_atac_quantiles_ribo = function(mod, tracks,sh_nms,file_name,th_
 		gvtrack.iterator(ndx$short_name[i], sshift = -140, eshift= 140)
         }
 
-		#mod$track_atac_ribo = fread(paste0("data/index_tracks_atac_",file_name,'.csv'), stringsAsFactors=F)
+		#mod$track_atac_ribo = fread(paste0("./data/files/index_tracks_atac_",file_name,'.csv'), stringsAsFactors=F)
 
 	
 	tss = mod$tss
@@ -1691,7 +1691,7 @@ compute_specific_atac_quantiles_ribo = function(mod, tracks,sh_nms,file_name,th_
     csum = colSums(gext[,-c(1,2,3,ncol(gext))])
     ndx$cov = as.numeric(csum)
     #mod$track_atac_ribo = ndx
-    fwrite(ndx,paste0("data/index_tracks_atac_",file_name,'.csv'))
+    fwrite(ndx,paste0("./data/files/index_tracks_atac_",file_name,'.csv'))
 		 message('calcultating quantiles')
 		thresh = list()
 		for(i in 1:nrow(ndx)) {
@@ -1699,7 +1699,7 @@ compute_specific_atac_quantiles_ribo = function(mod, tracks,sh_nms,file_name,th_
 		}
 		th_mat = do.call('rbind',thresh)
 		rownames(th_mat) = ndx$short_name
-		write.table(th_mat, file=paste0("data/track_thresh_atac_",file_name,'.txt'), quote=F, sep="\t")
+		write.table(th_mat, file=paste0("./data/files/track_thresh_atac_",file_name,'.txt'), quote=F, sep="\t")
 		#mod$atac_track_thresh = th_mat       
 	
  return(list(ndx = ndx,th_mat = th_mat))
@@ -1714,7 +1714,7 @@ pcg_update_track_q_thresh = function(mod)
 	}
 	th_mat = do.call('rbind',thresh)
 	rownames(th_mat) = ndx$short_name
-	write.table(th_mat, file="data/track_thresh.txt", quote=F, sep="\t")
+	write.table(th_mat, file="./data/files/track_thresh.txt", quote=F, sep="\t")
 
 	mod$k27_track_thresh = th_mat
 
@@ -1725,7 +1725,7 @@ pcg_update_track_q_thresh = function(mod)
 	}
 	th_mat_k4 = do.call('rbind',thresh_k4)
 	rownames(th_mat_k4) = tnm_k4
-	write.table(th_mat_k4, file="data/track_thresh_k4.txt", quote=F, sep="\t")
+	write.table(th_mat_k4, file="./data/files/track_thresh_k4.txt", quote=F, sep="\t")
 	mod$k4_track_thresh = th_mat_k4
 	return(mod)
 }
@@ -1738,10 +1738,10 @@ pcg_compute_k27_doms = function(mod, th_percent="X0.99")
 		gvtrack.create(ndx$short_name[i], ndx$track_k27[i], "sum") 
 		gvtrack.iterator(ndx$short_name[i], sshift = -140, eshift= 140)
 	}
-	if(file.exists("data/track_thresh.txt")) {
-		mod$k27_track_thresh = read.table("data/track_thresh.txt", sep="\t", stringsAsFactors=F)
+	if(file.exists("./data/files/track_thresh.txt")) {
+		mod$k27_track_thresh = read.table("./data/files/track_thresh.txt", sep="\t", stringsAsFactors=F)
 		th_mat = mod$k27_track_thresh
-		mod$k4_track_thresh = read.table("data/track_thresh_k4.txt", sep="\t", stringsAsFactors=F)
+		mod$k4_track_thresh = read.table("./data/files/track_thresh_k4.txt", sep="\t", stringsAsFactors=F)
 	} else {
 		thresh = list()
 		for(i in 1:nrow(ndx)) {
@@ -1749,7 +1749,7 @@ pcg_compute_k27_doms = function(mod, th_percent="X0.99")
 		}
 		th_mat = do.call('rbind',thresh)
 		rownames(th_mat) = ndx$short_name
-		write.table(th_mat, file="data/track_thresh.txt", quote=F, sep="\t")
+		write.table(th_mat, file="./data/files/track_thresh.txt", quote=F, sep="\t")
 
 		thresh_k4 = list()
 		tnm_k4 = gen_k4_vt(mod)
@@ -1758,7 +1758,7 @@ pcg_compute_k27_doms = function(mod, th_percent="X0.99")
 		}
 		th_mat_k4 = do.call('rbind',thresh_k4)
 		rownames(th_mat_k4) = tnm_k4
-		write.table(th_mat_k4, file="data/track_thresh_k4.txt", quote=F, sep="\t")
+		write.table(th_mat_k4, file="./data/files/track_thresh_k4.txt", quote=F, sep="\t")
 		mod$k4_track_thresh = th_mat_k4
 	}
 
@@ -2124,9 +2124,9 @@ pcg_gen_scale50k_k27 = function(mod)
 ####
 pcg_gen_cg_h_doms = function(mod, force_update=F)
 {
-	if(!force_update & file.exists("data/cgdom_ann_new.RDS")) {
-		mod$cgdom_ann = readRDS("data/cgdom_ann_new.RDS")
-		mod$cgd_rpt = readRDS("data/cgd_rpt_new.RDS")
+	if(!force_update & file.exists("./data/files/cgdom_ann_new.RDS")) {
+		mod$cgdom_ann = readRDS("./data/files/cgdom_ann_new.RDS")
+		mod$cgd_rpt = readRDS("./data/files/cgd_rpt_new.RDS")
 		return(mod)
 	}
 	options(gmax.data.size=1e+9)
@@ -2282,8 +2282,8 @@ pcg_gen_cg_h_doms = function(mod, force_update=F)
 	mod$cgdom_ann = cgd_ann
 	mod$cgd_rpt = cgd_ann_mask
 	message("saving CGDDs")
-	saveRDS(mod$cgdom_ann, "./data/cgdom_ann_new.RDS")
-	saveRDS(mod$cgd_rpt, "./data/cgd_rpt_new.RDS")
+	saveRDS(mod$cgdom_ann, "./data/files/cgdom_ann_new.RDS")
+	saveRDS(mod$cgd_rpt, "./data/files/cgd_rpt_new.RDS")
 
 	return(mod)
 }
@@ -2416,7 +2416,7 @@ pcg_gen_gw_distrib = function(mod, foc_chroms = c(1,2,3))
 	gvtrack.iterator("epi_meth", sshift=-150, eshift=150)
 
         message("lm 10% test noX final model")
-        seeds = readRDS('./data/lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
+        seeds = readRDS('./data/files/lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
         seeds$pred_seed_k27 = seeds$k27_pred
         seeds$pred_seed_k4 = seeds$k4_pred
     
@@ -2699,15 +2699,15 @@ wl2 = win_len/2
 	gvtrack.iterator("eb3_k4", sshift=-150+wl2, eshift=150-wl2)
 	gvtrack.iterator("eb4dko_k4", sshift=-150+wl2, eshift=150-wl2)
 	gvtrack.iterator("eb3dko_k4", sshift=-150+wl2, eshift=150-wl2)
-	cgt = readRDS('./data/cg_trace_mm10.rds')
-	if (file.exists('./data/cgt_met_fig4.rds')) {
-        cgt_met = readRDS('./data/cgt_met_fig4.rds')
+	cgt = readRDS('./data/files/cg_trace_mm10.rds')
+	if (file.exists('./data/files/cgt_met_fig4.rds')) {
+        cgt_met = readRDS('./data/files/cgt_met_fig4.rds')
        
     }else {
 cgt_met = gextract(c("epi_meth", "2^eb4_k27 - 27.85", "eb3dko_k27", 
         "2^eb4dko_k27 - 26.17"), intervals = cgt, iterator = cgt, 
         colnames = c("epi_meth", "eb4_k27", "eb3dko_k27", "eb4dko_k27"))
-saveRDS(cgt_met,'./data/cgt_met_fig4.rds')
+saveRDS(cgt_met,'./data/files/cgt_met_fig4.rds')
         }
 	
 	#cgt_met = gextract(c("epi_meth", "2^eb4_k27 - 27.85","eb3dko_k27", "2^eb4dko_k27 - 26.17"), intervals = cgt, iterator = cgt,
@@ -2809,16 +2809,16 @@ plt_far_5mc_cg_pcg_k4 = function (mod, pdf_fn = "figs/far_5mc_pcg_2i.pdf")
     gvtrack.create("epi_meth", "jk.epipcg.meth.meissN20.WT_Epi_rep1", 
         "avg")
     gvtrack.iterator("epi_meth", sshift = -150, eshift = 150)
-    cgt = readRDS('./data/cg_trace_mm10.rds')
+    cgt = readRDS('./data/files/cg_trace_mm10.rds')
 	
 	
-if (file.exists('./data/cgt_met_k4_fig4.rds')) {
-        cgt_met = readRDS('./data/cgt_met_k4_fig4.rds')
+if (file.exists('./data/files/cgt_met_k4_fig4.rds')) {
+        cgt_met = readRDS('./data/files/cgt_met_k4_fig4.rds')
        
     }else {
 cgt_met = gextract(c("epi_meth", "eb3_k4", "eb3dko_k4", "ES_cnt"), 
         intervals = cgt, iterator = cgt)
-saveRDS(cgt_met,'./data/cgt_met_k4_fig4.rds')
+saveRDS(cgt_met,'./data/files/cgt_met_k4_fig4.rds')
         }
 	
     #cgt_met = gextract(c("epi_meth", "eb3_k4", "eb3dko_k4", 
@@ -4107,9 +4107,9 @@ plt_region = function(mod, chr, st, end, marg5=2e+3, marg3=2e+3, mark=c(), wk4=F
 
 pcg_gen_cg_ih_doms = function(mod, force_update=F)
 {
-	if(!force_update & file.exists("data/cgdom_ann_i.RDS")) {
-		mod$cgdom_ann_i = readRDS("data/cgdom_ann_i.RDS")
-		mod$cgd_rpt_i = readRDS("data/cgd_rpt_i.RDS")
+	if(!force_update & file.exists("./data/files/cgdom_ann_i.RDS")) {
+		mod$cgdom_ann_i = readRDS("./data/files/cgdom_ann_i.RDS")
+		mod$cgd_rpt_i = readRDS("./data/files/cgd_rpt_i.RDS")
 		return(mod)
 	}else{
 	options(gmax.data.size=1e+9)
@@ -4255,8 +4255,8 @@ pcg_gen_cg_ih_doms = function(mod, force_update=F)
 	
 	mod$cgdom_ann_i = cgd_ann
 	mod$cgd_rpt_i = cgd_ann_mask
-	saveRDS(mod$cgdom_ann_i, "data/cgdom_ann_i.RDS")
-	saveRDS(mod$cgd_rpt_i, "data/cgd_rpt_i.RDS")
+	saveRDS(mod$cgdom_ann_i, "./data/files/cgdom_ann_i.RDS")
+	saveRDS(mod$cgd_rpt_i, "./data/files/cgd_rpt_i.RDS")
 
 	return(mod)
 	}
@@ -4402,7 +4402,7 @@ pcg_build_gw_feats = function(mod, brz='lm')
 	
 	} else {
 	message('lm 10% test noX final')
-	seeds = readRDS('./data/lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
+	seeds = readRDS('./data/files/lm_10test_noX_seeds_logist_dinucs_logist_fig1.rds')
 
 	seeds$pred_seed_k27 = seeds$k27_pred
 	seeds$pred_seed_k4 = seeds$k4_pred
@@ -5237,15 +5237,15 @@ pcg_build_mod_from_feats = function(mod, resp, formu, feats, f_train, f_test, f_
 }
 
 peaks_eb = function(){
-peaks_epi = readRDS('./data/peaks_atac_CRJK_0373_atac_wt_to_wt_epi_eb_d5.rds')
+peaks_epi = readRDS('./data/files/peaks_atac_CRJK_0373_atac_wt_to_wt_epi_eb_d5.rds')
 peaks_epi = peaks_epi$peaks
 dim(peaks_epi)
 
-peaks_meso = readRDS('./data/peaks_atac_CRJK_0377_atac_wt_to_wt_meso_eb_d5.rds')
+peaks_meso = readRDS('./data/files/peaks_atac_CRJK_0377_atac_wt_to_wt_meso_eb_d5.rds')
 peaks_meso = peaks_meso$peaks
 dim(peaks_meso)
 
-peaks_endo = readRDS('./data/peaks_atac_CRJK_0376_atac_wt_to_wt_endo_eb_d5.rds')
+peaks_endo = readRDS('./data/files/peaks_atac_CRJK_0376_atac_wt_to_wt_endo_eb_d5.rds')
 peaks_endo = peaks_endo$peaks
 dim(peaks_endo)
 
@@ -5308,8 +5308,8 @@ ribo_cov = colSums(ribo_ge[,names(tracks_atac)])
 return(ribo_cov)
 }
 fig5_track_cov = function(){
-if (file.exists('./data/tracks_cov.rds')){
-    tracks_cov = readRDS('./data/tracks_cov.rds')
+if (file.exists('./data/files/tracks_cov.rds')){
+    tracks_cov = readRDS('./data/files/tracks_cov.rds')
     cov_vect = as.numeric(tracks_cov$cov_vect)
     names(cov_vect) = rownames(tracks_cov)
 }else{
