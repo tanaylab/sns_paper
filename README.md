@@ -20,7 +20,7 @@ The model follows a **seed-and-spread framework**:
 
 1. **CpG-dense domains (CGDDs)** act as epigenomic seeds  
 2. **Motif logic** determines PcG vs TxG identity at seeds  
-3. **Polycomb spreading** generates chromosomal PcG domains 
+3. **Polycomb spreading** generates chromosomal PcG domains  
 DNA methylation acts as an **antagonist of PcG spreading**.
 
 ## Repository structure
