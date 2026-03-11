@@ -1,11 +1,7 @@
-# Reverse engineering the genomic encodings of the pluripotent epigenome
+# Seed and Spread (SnS) model of the pluripotent epigenome paper companion repository
 
-Code supplement for the paper:
-
+Welcome to the companion repository for the 
 **Reverse engineering the genomic encodings of the pluripotent epigenome**
-Evgheni Casimov, Aviezer Lifshitz, Lior Peretz, Akhiad Bercovich, Yosef Maimon, Ofir Raz, Tal Sokolov, Yoav Mayshar, Zohar Mukamel, Yonatan Stelzer, Amos Tanay
-
-Correspondence: amos.tanay@weizmann.ac.il
 
 ## Overview
 During early embryogenesis the epigenome is globally erased and rebuilt in pluripotent cells of the **epiblast**.
