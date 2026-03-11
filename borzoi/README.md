@@ -250,9 +250,9 @@ Trained model checkpoints for all configurations are available on [HuggingFace](
 
 | Model series | Description | HuggingFace |
 |---|---|---|
-| **Flashzoi silicus** (from scratch) | Trained from scratch on synthetic genomes (2 models) | `sns-paper-flashzoi-{silicus55,silicuspluscgdcrectcfexonte}-from-scratch` |
-| **Flashzoi silicus** (fine-tuned) | mm10-trained Flashzoi fine-tuned on synthetic genomes (10 models: telescope series + markovius) | `sns-paper-flashzoi-{variant}-finetuned` |
-| **Borzoi FM silicus** (fine-tuned) | Pre-trained Borzoi FM fine-tuned on synthetic genomes (10 models: FM telescope + markov + random) | `sns-paper-borzoi-fm-{variant}` |
+| **Flashzoi silicus** (from scratch) | Trained from scratch on synthetic genomes (2 models) | [`sns-paper-flashzoi-*-from-scratch`](https://huggingface.co/collections/tanaylab/sns-paper-flashzoi-silicus-from-scratch-69b14fe4c25e7d1ad53458e6) |
+| **Flashzoi silicus** (fine-tuned) | mm10-trained Flashzoi fine-tuned on synthetic genomes (10 models: telescope series + markovius) | [`sns-paper-flashzoi-*-finetuned`](https://huggingface.co/collections/tanaylab/sns-paper-flashzoi-silicus-fine-tuned-69b14fe5e3b1e2000df408e5) |
+| **Borzoi FM silicus** (fine-tuned) | Pre-trained Borzoi FM fine-tuned on synthetic genomes (10 models: FM telescope + markov + random) | [`sns-paper-borzoi-fm-*`](https://huggingface.co/collections/tanaylab/sns-paper-borzoi-fm-silicus-fine-tuned-69b14fe746c6e7a9648abac8) |
 
 Each repo contains `model.safetensors` (weights) and `config.yaml` (training configuration). All models are under the [`tanaylab`](https://huggingface.co/tanaylab) organization.
 
