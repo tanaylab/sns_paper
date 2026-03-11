@@ -12,7 +12,7 @@ During early embryogenesis the epigenome is globally erased and rebuilt in pluri
 
 Because this state is established **de novo**, it must largely be **encoded in DNA sequence**.
 
-This project asks:
+This project asks:  
 **Can the pluripotent epigenome be predicted directly from sequence?**  
 **Can genomic transformers “explain”, not just predict, the epigenome?**  
 This repository contains all analysis code for the seed-and-spread (SNS) model of the pluripotent epigenome. The model predicts genome-wide distributions of Polycomb (H3K27me3), Trithorax (H3K4me3) and DNA methylation.
@@ -190,16 +190,13 @@ remotes::install_github("tanaylab/shaman")
 
 ### Borzoi/Flashzoi training and in-silico genome analysis
 
-The Flashzoi model training and Borzoi fine-tuning (Fig 5) were performed using the [borzoi-finetune](https://github.com/tanaylab/borzoi-finetune) codebase. All training configurations used in the paper are provided in the `borzoi/` directory, organized by experiment type:
+The `borzoi/` directory contains all training code, configurations, and inference scripts for the deep learning models in Fig 5:
 
-- `borzoi/configs/flashzoi_rf/` — Flashzoi from-scratch training (1kb–524kb receptive fields)
-- `borzoi/configs/borzoi_finetuned_rf/` — Borzoi foundation model fine-tuning (1kb–524kb)
-- `borzoi/configs/silicus_from_scratch/` — Flashzoi trained on in-silico genomes
-- `borzoi/configs/silicus_finetuned/` — Flashzoi fine-tuned from mm10 to synthetic genomes
-- `borzoi/configs/fm_silicus/` — Borzoi fine-tuned on synthetic genomes
-- `borzoi/inference/` — Inference scripts for silicus+/mm10- genome perturbation experiments
+- `borzoi/code/` — Training, inference, and perturbation analysis Python code
+- `borzoi/configs/` — 57 YAML training configurations across 5 experiment categories
+- `borzoi/inference/` — Shell scripts for in-silico genome perturbation experiments
 
-See `borzoi/README.md` for detailed documentation of each config category and how to run training/inference. Pre-computed model predictions are provided in the data tracks.
+Pre-computed model predictions are provided in the misha tracks, so re-training is **not required** to reproduce the figures. Trained model checkpoints are available on HuggingFace (see `borzoi/README.md`).
 
 ## License
 
