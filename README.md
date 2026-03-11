@@ -8,14 +8,30 @@ Evgheni Casimov, Aviezer Lifshitz, Lior Peretz, Akhiad Bercovich, Yosef Maimon, 
 Correspondence: amos.tanay@weizmann.ac.il
 
 ## Overview
+During early embryogenesis the epigenome is globally erased and rebuilt in pluripotent cells of the **epiblast**.
 
-This repository contains all analysis code for the seed-and-spread (SNS) model of the pluripotent epigenome. The model predicts genome-wide distributions of Polycomb (H3K27me3) and Trithorax (H3K4me3) marks from DNA sequence, using CpG-dense domains (CGDDs) as epigenomic seeds.
+Because this state is established **de novo**, it must largely be **encoded in DNA sequence**.
+
+This project asks:
+**Can the pluripotent epigenome be predicted directly from sequence?**
+**Can genomic transformers “explain”, not just predict, the epigenome?**
+This repository contains all analysis code for the seed-and-spread (SNS) model of the pluripotent epigenome. The model predicts genome-wide distributions of Polycomb (H3K27me3), Trithorax (H3K4me3) and DNA methylation.
+The model follows a **seed-and-spread framework**:
+
+1. **CpG-dense domains (CGDDs)** act as epigenomic seeds  
+2. **Motif logic** determines PcG vs TxG identity at seeds  
+3. **Polycomb spreading** generates chromosomal PcG domains 
+DNA methylation acts as an **antagonist of PcG spreading**.
 
 ## Repository structure
 
 ```
 sns_paper/
   analysis/          Jupyter notebooks reproducing all main and supplementary figures
+  borzoi/            Borzoi/Flashzoi training, inference, and configs (Fig 5)
+    code/            Training and inference Python code (borzoi-finetune library)
+    configs/         YAML training configurations organized by experiment type
+    inference/       Shell scripts for in-silico genome inference experiments
   code/              R and Python source code (utility functions, models, data preparation)
   data/              Genomic data, misha track databases, and precomputed intermediates
     mm10/            Mouse genome (misha database with tracks)
@@ -73,6 +89,7 @@ These scripts document how intermediate data was generated. They reference local
 
 | File | Description |
 |------|-------------|
+| `analysis/create_genomes.ipynb` | Create synthetic genomes (silicus, markovius, mm10-minus variants) for Fig 5 |
 | `code/prepare_data_borzoi.R` / `.ipynb` | Import Borzoi predictions into misha tracks |
 | `code/norm_run_sns_cnt_atac_norm.ipynb` | CUT&Tag normalization using ATAC tracks |
 | `code/find_atac_peaks.ipynb` | ATAC peak calling |
@@ -107,7 +124,8 @@ wget https://sns-paper.s3.amazonaws.com/hg19.tar.gz
 wget https://sns-paper.s3.amazonaws.com/tables.tar.gz
 wget https://sns-paper.s3.amazonaws.com/output.tar.gz
 
-tar xzf files.tar.gz -C data/
+#tar xzf files.tar.gz -C data/
+tar -xzf files.tar.gz --strip-components=1 -C /data
 tar xzf mm10.tar.gz -C data/
 tar xzf hg19.tar.gz -C data/
 tar xzf tables.tar.gz
@@ -118,7 +136,7 @@ The `data/` directory includes:
 
 - `data/mm10/` — Mouse misha genome database with CUT&Tag, ATAC, and model prediction tracks
 - `data/hg19/` — Human misha genome database with CUT&Tag tracks
-- `data/files/` — Intermediate analysis files (CGDD annotations, motif features, model predictions, in-silico transfection results)
+- `data/` — Intermediate analysis files (CGDD annotations, motif features, model predictions, in-silico transfection results)
 
 ### Supplementary tables
 
@@ -170,9 +188,18 @@ remotes::install_github("tanaylab/shaman")
 3. Open the Jupyter notebooks in the `analysis/` directory. Each notebook is self-contained and loads data using `here()` relative paths from the repository root.
 4. The notebooks are meant to be run with an R kernel (IRkernel) in Jupyter.
 
-### Borzoi/Flashzoi pre-training
+### Borzoi/Flashzoi training and in-silico genome analysis
 
-The Flashzoi model pre-training (Fig 5) was performed using a separate codebase. See the [borzoi-finetune](https://github.com/tanaylab/borzoi-finetune) repository for training scripts, configurations, and documentation. Pre-computed model predictions are provided in the data tracks.
+The Flashzoi model training and Borzoi fine-tuning (Fig 5) were performed using the [borzoi-finetune](https://github.com/tanaylab/borzoi-finetune) codebase. All training configurations used in the paper are provided in the `borzoi/` directory, organized by experiment type:
+
+- `borzoi/configs/flashzoi_rf/` — Flashzoi from-scratch training (1kb–524kb receptive fields)
+- `borzoi/configs/borzoi_finetuned_rf/` — Borzoi foundation model fine-tuning (1kb–524kb)
+- `borzoi/configs/silicus_from_scratch/` — Flashzoi trained on in-silico genomes
+- `borzoi/configs/silicus_finetuned/` — Flashzoi fine-tuned from mm10 to synthetic genomes
+- `borzoi/configs/fm_silicus/` — Borzoi fine-tuned on synthetic genomes
+- `borzoi/inference/` — Inference scripts for silicus+/mm10- genome perturbation experiments
+
+See `borzoi/README.md` for detailed documentation of each config category and how to run training/inference. Pre-computed model predictions are provided in the data tracks.
 
 ## License
 
