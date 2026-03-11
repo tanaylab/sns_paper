@@ -237,12 +237,26 @@ The pre-computed results are provided in `data/files/schubler/`:
 
 ## Pre-trained model weights
 
-Trained model checkpoints for all configurations are available on HuggingFace:
+Trained model checkpoints for all configurations are available on [HuggingFace](https://huggingface.co/tanaylab):
 
-- **Flashzoi models** (from-scratch): `tanaylab/sns-paper-flashzoi-rf{1k..524k}`
-- **Fine-tuned Borzoi FM models**: `tanaylab/sns-paper-borzoi-finetuned-rf{1k..524k}`
+### mm10 receptive field series (Fig 5A-B)
 
-These checkpoints can be used directly with `infer_borzoi_pytorch.py` for inference or as starting points for the silicus/mm10-minus fine-tuning experiments.
+| Model series | Receptive fields | HuggingFace |
+|---|---|---|
+| **Flashzoi** (from scratch) | 1k – 524k | [`sns-paper-flashzoi-rf{1k..524k}`](https://huggingface.co/collections/tanaylab/sns-paper-flashzoi-models-69b14882da177c6ec6623b6c) |
+| **Borzoi FM** (fine-tuned) | 1k – 524k | [`sns-paper-borzoi-finetuned-rf{1k..524k}`](https://huggingface.co/collections/tanaylab/sns-paper-borzoi-fine-tuned-models-69b148d031a38501cc77ed44) |
+
+### In-silico genome models (Fig 5C, Fig S7-S8)
+
+| Model series | Description | HuggingFace |
+|---|---|---|
+| **Flashzoi silicus** (from scratch) | Trained from scratch on synthetic genomes (2 models) | `sns-paper-flashzoi-{silicus55,silicuspluscgdcrectcfexonte}-from-scratch` |
+| **Flashzoi silicus** (fine-tuned) | mm10-trained Flashzoi fine-tuned on synthetic genomes (10 models: telescope series + markovius) | `sns-paper-flashzoi-{variant}-finetuned` |
+| **Borzoi FM silicus** (fine-tuned) | Pre-trained Borzoi FM fine-tuned on synthetic genomes (10 models: FM telescope + markov + random) | `sns-paper-borzoi-fm-{variant}` |
+
+Each repo contains `model.safetensors` (weights) and `config.yaml` (training configuration). All models are under the [`tanaylab`](https://huggingface.co/tanaylab) organization.
+
+The mm10 RF models can be used directly with `infer_borzoi_pytorch.py` for inference, including on synthetic genomes (see `inference/` scripts). The silicus fine-tuned models were created by taking the mm10-trained checkpoint and fine-tuning on synthetic genomes.
 
 ## Data paths
 

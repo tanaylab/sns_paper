@@ -195,7 +195,7 @@ The `borzoi/` directory contains all training code, configurations, and inferenc
 - `borzoi/configs/` — 57 YAML training configurations across 5 experiment categories
 - `borzoi/inference/` — Shell scripts for in-silico genome perturbation experiments
 
-Pre-computed model predictions are provided in the misha tracks, so re-training is **not required** to reproduce the figures. Trained model checkpoints are available on HuggingFace (see `borzoi/README.md`).
+Pre-computed model predictions are provided in the misha tracks, so re-training is **not required** to reproduce the figures. All 42 trained model checkpoints are available on [HuggingFace](https://huggingface.co/tanaylab) (20 mm10 RF models + 22 in-silico genome models). See `borzoi/README.md` for the full listing and details.
 
 ## License
 
