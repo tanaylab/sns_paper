@@ -1326,7 +1326,7 @@ class BorzoiDataset(Dataset):
             'start': pred_start,
             'end': pred_end,
             'bin_size': self.bin_size,
-            'genome_name': self.genome_name,
+            'genome_name': self.genome_name or "",
         }
 
         return seq_tensor, target_tensor, metadata
