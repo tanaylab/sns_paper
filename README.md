@@ -36,6 +36,7 @@ sns_paper/
   data/              Genomic data, misha track databases, and precomputed intermediates
     mm10/            Mouse genome (misha database with tracks)
     hg19/            Human genome (misha database with tracks)
+	files/           Precomputed intermediates 			
   tables/            Supplementary tables and large precomputed R objects
   figs/              Figure outputs (PPTX and PNG)
   output/            Analysis output files
@@ -123,8 +124,7 @@ wget https://sns-paper.s3.amazonaws.com/hg19.tar.gz
 wget https://sns-paper.s3.amazonaws.com/tables.tar.gz
 wget https://sns-paper.s3.amazonaws.com/output.tar.gz
 
-#tar xzf files.tar.gz -C data/
-tar -xzf files.tar.gz --strip-components=1 -C /data
+tar xzf files.tar.gz -C data/
 tar xzf mm10.tar.gz -C data/
 tar xzf hg19.tar.gz -C data/
 tar xzf tables.tar.gz
