@@ -11,6 +11,10 @@ Because this state is established **de novo**, it must largely be **encoded in D
 This project asks:  
 **Can the pluripotent epigenome be predicted directly from sequence?**  
 **Can genomic transformers “explain”, not just predict, the epigenome?**  
+
+
+
+
 This repository contains all analysis code for the seed-and-spread (SNS) model of the pluripotent epigenome. The model predicts genome-wide distributions of Polycomb (H3K27me3), Trithorax (H3K4me3) and DNA methylation.
 The model follows a **seed-and-spread framework**:
 
